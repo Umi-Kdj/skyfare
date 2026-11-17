@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const MyApp());
@@ -492,21 +493,22 @@ class AboutPage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // GITHUB PLACEHOLDER
-            const Card(
+            
+            // GITHUB REPOSITORY LINK
+            Card(
               child: Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.code,
                       color: Colors.teal,
                       size: 35,
                     ),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
-                    Text(
+                    const Text(
                       'GitHub Repository',
                       style: TextStyle(
                         fontSize: 18,
@@ -514,11 +516,46 @@ class AboutPage extends StatelessWidget {
                       ),
                     ),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
-                    Text(
-                      'Repository link will be added soon.',
-                      textAlign: TextAlign.center,
+                    // CLICKABLE GITHUB LINK
+                    TextButton.icon(
+                      onPressed: () async {
+                        final Uri githubUrl = Uri.parse(
+                          'https://github.com/Umi-Kdj/skyfare',
+                        );
+
+                        try {
+                          final bool opened = await launchUrl(
+                            githubUrl,
+                            mode: LaunchMode.externalApplication,
+                          );
+
+                          if (!opened && context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Could not open GitHub repository.',
+                                ),
+                              ),
+                            );
+                          }
+                        } catch (error) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Could not open GitHub repository.',
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      icon: const Icon(Icons.open_in_new),
+                      label: const Text(
+                        'github.com/Umi-Kdj/skyfare',
+                      ),
                     ),
                   ],
                 ),
